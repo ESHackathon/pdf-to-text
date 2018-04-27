@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>File Uploader</title>
+  <link href='https://fonts.googleapis.com/css?family=Raleway' rel='stylesheet' type='text/css'>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+  <!-- <link rel="stylesheet" href="static/bootstrap.min.css"> -->
+  <style type="text/css">
+    html,
+    body {
+      height: 100%;
+      background-color: #4791D2;
+    }
+
+    body {
+      text-align: center;
+      font-family: 'Raleway', sans-serif;
+    }
+    .references{
+      
+    }
+  </style>
+</head>
+<body>
+
+  <div id="step1">
+    <div class="container">
+      <div class="row">
+        <div class="col-xs-12">
+          <div class="panel panel-default">
+            <div class="panel-body">
+              <h2>Upload PDF</h2>
+              <div class="progress">
+                <div class="progress-bar" role="progressbar"></div>
+              </div>
+              <input id="files-to-upload" type="file" name="uploads[]" multiple="multiple"></br>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div id="step2" style="display:none;">
+    <div>
+      <button id="new-pdf" class="btn btn-primary">Upload a new PDF</button>
+    </div>
+    <div class="row">
+      <pre class="col-xs-6"><h1>PDF text</h1><code id="txt"></code></pre>
+      <pre class="col-xs-6 references"><h1>References</h1><code id="references"></code></pre>
+    </div>
+  </div>
+
+  <!-- <script src="static/jquery-2.2.0.min.js"></script> -->
+  <script src="https://code.jquery.com/jquery-2.2.4.min.js" integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44=" crossorigin="anonymous"></script>
+  <!-- <script src="static/bootstrap.min.js"></script> -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+  <script src="js/upload.js"></script>
+  <script src="js/select-text.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>
