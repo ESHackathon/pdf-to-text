@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
 import sys
 import re
 import os
@@ -5,37 +7,22 @@ import json
 
 REGEX_1 = r"[A-Z][a-zA-Z\-\:]{2,} [A-Z\-\:]{1,2}, [A-Z][a-zA-Z\-\:]{2,} [A-Z\-\:]{1,2},"
 REGEX_2 = r"[A-Z][a-zA-Z\-\:]{2,}, [A-Z\-\:]{1,2}\., [A-Z][a-zA-Z\-\:]{2,}, [A-Z\-\:]{1,2}\.,"
-REFERENCES = r"R[eE][fF][eE][rR][eE][nN][Cc][eE]"
-SPACING = 25
+REGEX_3 = r"[A-Z][a-zA-Z\-\:]{2,}, [A-Z\-\:]{1,2}\.,"
+REFERENCES = r"R[eE][fF][eE][rR][eE][nN][Cc][eE][sS]"
+SPACING = 35
 
 LINES_SPLIT_REGEXS = [
     r'([0-9]{4};[^\.]*\.)',
-    r'([1,2][0-9]{3}[^\.]*[^ ]*\. \[?[0-9]{1,3}\]?\.?)',
+    r'([1,2][0-9]{3}[^\.]*[^ ]*\.) (\[?[0-9]{1,3}\]?\.?)',
     r'([1,2][0-9]{3}[^\.]*\.)'
 ]
 
-def find_references(file_lines, regexp):
-    pdf_lines = []
-    index = 0
-    lines_numbers = []
-    et_al_lines = []
-    lines_length = []
-    for line in file_lines:
-        index += 1
-        found = 0
-        matches = []
-        if re.search(REFERENCES, line):
-            lines_numbers.append(index)
-        for match_el in re.finditer(regexp, line):
-            lines_numbers.append(index)
-            lines_length.append(len(line))
-    if len(lines_numbers) > 0:
-        return lines_numbers
-    # import ipdb; import pprint; ipdb.set_trace(context=10); pass
-    # elif len(lines_numbers) == 1 and lines_length[0] > 200:
-    #     return lines_numbers
-    # else:
-    #     return None
+def possible_references(line, regexp, index):
+    if re.search(REFERENCES, line):
+        return index
+    for _ in re.finditer(regexp, line):
+        return index
+
 
 def find_start_end(references_lines_index):
     if len(references_lines_index) == 0:
@@ -56,7 +43,7 @@ def find_start_end(references_lines_index):
 
 def separate_lines(file_lines, start_end):
     if len(start_end) > 1:
-        return file_lines[0:start_end[0]] + file_lines[start_end[1]:], file_lines[start_end[0] - 1:start_end[1]]
+        return file_lines[0:start_end[0]] + file_lines[start_end[1]:], file_lines[start_end[0] - 1:start_end[1] + 1]
     if len(start_end) == 1:
         return file_lines[0:start_end[0]], file_lines[start_end[0] - 1:]
     else:
@@ -67,19 +54,24 @@ def split_line_references(lines):
     for line in lines:
         found_match = False
         for regex in LINES_SPLIT_REGEXS:
+            replacement = r"\1\n"
+            if len([char for char in regex if char == "("]) > 1:
+                replacement = r"\1\n\2"
+
             matched = re.search(regex, line)
             if matched and len(matched.groups()) > 0:
-                lines_splitted = re.sub(regex, "\1\n", line).split("\n")
-                if len(lines_splitted[0]) / len(lines_splitted[1]) > 5:
+                lines_splitted = [
+                    line for line in re.sub(regex, replacement, line).split("\n")
+                    if line
+                ]
+                if len(lines_splitted) > 1 and len(lines_splitted[0]) / len(lines_splitted[1]) > 5:
                     continue
                 new_lines += lines_splitted
                 found_match = True
                 break
         if not found_match:
             new_lines.append(line)
-    return "\n".join([line.strip() for line in new_lines])
-
-
+    return "\n".join([line.strip() for line in new_lines if len(line) < 800])
 
 def main():
     file_path = sys.argv[1]
@@ -87,15 +79,16 @@ def main():
     base_name =  os.path.splitext(os.path.basename(file_path))[0]
     file_lines = open(file_path).readlines()
     start_end = None
-    matches = find_references(file_lines, REGEX_1)
     references_lines_index = []
-    if matches:
-        references_lines_index = matches
-    else:
-        matches = find_references(file_lines, REGEX_2)
-        if matches:
-            references_lines_index = matches
+    for index, line in enumerate(file_lines):
+        for regexp in [REGEX_1, REGEX_2, REGEX_3]:
+            match = possible_references(line, regexp, index)
+            if match:
+                references_lines_index.append(match)
+                break
+    # print(references_lines_index)
     start_end = find_start_end(references_lines_index)
+    # print(start_end)
     lines_no_references, references_lines = separate_lines(file_lines, start_end)
 
     with open(os.path.join(base_dir, base_name+'.references.txt'), 'w') as file_:

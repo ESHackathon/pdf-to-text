@@ -8,6 +8,7 @@ var path = require('path');
 // app.use(express.static(path.join(__dirname, 'static')));
 
 app.use('/static', express.static('static'));
+app.use('/js', express.static('js'));
 
 app.get('/', function(req, res){
   res.sendFile(path.join(__dirname, 'index.html'));
@@ -59,7 +60,9 @@ app.post('/pdf-to-txt', function(req, res){
   });
   form.on('end', function() {
     process_pdf(target_filepath, (err, txt_processed_filename) => {
+      // console.log("txt", txt_processed_filename)
       process_references(txt_processed_filename, (err, references_filename) => {
+        // console.log("references", references_filename)
         var references_json = JSON.parse(bufferFile(references_filename));
         return res.end(JSON.stringify(
           {
