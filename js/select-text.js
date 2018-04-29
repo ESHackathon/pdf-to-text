@@ -1,5 +1,9 @@
 // From this answer: https://stackoverflow.com/a/987376
 function SelectText(element) {
+    var is_selected = $('#autoselect').is(":checked");
+    if(!is_selected){
+        return;
+    }
     var doc = document
         , text = doc.getElementById(element)
         , range, selection

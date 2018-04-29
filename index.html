@@ -14,14 +14,30 @@
     body {
       height: 100%;
       background-color: #4791D2;
-    }
-
-    body {
       text-align: center;
       font-family: 'Raleway', sans-serif;
     }
-    .references{
-      
+
+    #step2{
+      margin-top: 35px;
+    }
+
+    .autoselect-container{
+      float: right;
+      height: 35px;
+      line-height: 35px;
+      padding-right: 30px;
+      color: #FFFFFF;
+    }
+
+    .fixed-nav-bar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      z-index: 9999;
+      width: 100%;
+      height: 35px;
+      background-color: #4791D2;
     }
   </style>
 </head>
@@ -45,9 +61,10 @@
     </div>
   </div>
   <div id="step2" style="display:none;">
-    <div>
+    <nav class="fixed-nav-bar">
       <button id="new-pdf" class="btn btn-primary">Upload a new PDF</button>
-    </div>
+      <span class="autoselect-container"><input type="checkbox" id="autoselect" name="autoselect" checked/> <label for="autoselect">Autoselect text</label></span>
+    </nav>
     <div class="row">
       <pre class="col-xs-6"><h1>PDF text</h1><code id="txt"></code></pre>
       <pre class="col-xs-6 references"><h1>References</h1><code id="references"></code></pre>
