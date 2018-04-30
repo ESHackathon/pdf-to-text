@@ -76,4 +76,9 @@ app.post('/pdf-to-txt', function(req, res){
   form.parse(req);
 });
 
-app.listen(3000, function(){console.log('localhost:3000');});
+var PORT = 80;
+if(process.argv.length > 2){
+  PORT = parseInt(process.argv[2]);
+}
+
+app.listen(PORT, function(){console.log('localhost:' + PORT.toString());});

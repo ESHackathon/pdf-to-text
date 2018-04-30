@@ -16,7 +16,7 @@ The main idea is to upload a PDF and:
 ## Run
 
 ```
-node server.js
+node server.js 8002
 ```
 
-Then you can access http://localhost:3000
+Then you can access http://localhost:8002
