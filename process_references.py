@@ -12,9 +12,22 @@ REFERENCES = r"R[eE][fF][eE][rR][eE][nN][Cc][eE][sS]"
 SPACING = 35
 
 LINES_SPLIT_REGEXS = [
-    r'([0-9]{4};[^\.]*\.)',
-    r'([1,2][0-9]{3}[^\.]*[^ ]*\.) (\[?[0-9]{1,3}\]?\.?)',
-    r'([1,2][0-9]{3}[^\.]*\.)'
+    (
+        r'(\b\[?[0-9]{1,3}\]?\.?\b) ([A-Z][a-zA-Z\-\:]{2,} [A-Z\-\:]{1,2},)',
+        r"\n\1\2"
+    ),
+    (
+        r'([0-9]{4};[^\.]*\.)',
+        r"\1\n"
+    ),
+    (
+        r'([1,2][0-9]{3}[^\.]*[^ ]*\.) (\[?[0-9]{1,3}\]?\.?\b)',
+        r"\1\n\2"
+    ),
+    (
+        r'([1,2][0-9]{3}[^\.]*\.)',
+        r"\1\n"
+    )
 ]
 
 def possible_references(line, regexp, index):
@@ -53,11 +66,7 @@ def split_line_references(lines):
     new_lines = []
     for line in lines:
         found_match = False
-        for regex in LINES_SPLIT_REGEXS:
-            replacement = r"\1\n"
-            if len([char for char in regex if char == "("]) > 1:
-                replacement = r"\1\n\2"
-
+        for regex, replacement in LINES_SPLIT_REGEXS:
             matched = re.search(regex, line)
             if matched and len(matched.groups()) > 0:
                 lines_splitted = [
