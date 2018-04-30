@@ -28,6 +28,13 @@
       text-align: center;
     }
 
+    div.row pre.full-text{
+      text-align: center;
+    }
+    div.row pre.references{
+      text-align: left;
+    }
+
     .autoselect-container{
       float: right;
       height: 35px;
@@ -89,7 +96,7 @@
       <span class="autoselect-container"><input type="checkbox" id="autoselect" name="autoselect" checked/> <label for="autoselect">Autoselect text</label></span>
     </nav>
     <div class="row">
-      <pre class="col-xs-6"><h1>PDF text</h1><code id="txt"></code></pre>
+      <pre class="col-xs-6 full-text"><h1>PDF text</h1><code id="txt"></code></pre>
       <pre class="col-xs-6 references"><h1>References</h1><code id="references"></code></pre>
     </div>
   </div>
