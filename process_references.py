@@ -80,7 +80,7 @@ def split_line_references(lines):
                 break
         if not found_match:
             new_lines.append(line)
-    return "\n".join([line.strip() for line in new_lines if len(line) < 800])
+    return "\n\n".join([line.strip() for line in new_lines if len(line) < 800])
 
 def main():
     file_path = sys.argv[1]
